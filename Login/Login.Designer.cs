@@ -55,6 +55,7 @@
             this.exitbtn.TabIndex = 1;
             this.exitbtn.Text = "Exit";
             this.exitbtn.UseVisualStyleBackColor = true;
+            this.exitbtn.Click += new System.EventHandler(this.exitbtn_Click);
             // 
             // user
             // 
@@ -96,6 +97,7 @@
             this.createlogin.TabIndex = 6;
             this.createlogin.Text = "Create";
             this.createlogin.UseVisualStyleBackColor = true;
+            this.createlogin.Click += new System.EventHandler(this.createlogin_Click);
             // 
             // Login
             // 

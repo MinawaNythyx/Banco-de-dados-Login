@@ -12,6 +12,7 @@ namespace Login
 {
     public partial class Login : Form
     {
+        databaseUse dtb = new databaseUse();
         public Login()
         {
             InitializeComponent();
@@ -19,8 +20,17 @@ namespace Login
 
         private void loginbtn_Click(object sender, EventArgs e)
         {
-            databaseUse dtb = new databaseUse();
-            dtb.connect();
+            dtb.ReadDB();
+        }
+
+        private void createlogin_Click(object sender, EventArgs e)
+        {
+            dtb.InsertDB(usertxt.Text, passtxt.Text);
+        }
+
+        private void exitbtn_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
