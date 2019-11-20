@@ -45,6 +45,7 @@
             this.loginbtn.TabIndex = 0;
             this.loginbtn.Text = "Login";
             this.loginbtn.UseVisualStyleBackColor = true;
+            this.loginbtn.Click += new System.EventHandler(this.loginbtn_Click);
             // 
             // exitbtn
             // 

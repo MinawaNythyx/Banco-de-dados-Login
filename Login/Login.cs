@@ -16,5 +16,11 @@ namespace Login
         {
             InitializeComponent();
         }
+
+        private void loginbtn_Click(object sender, EventArgs e)
+        {
+            databaseUse dtb = new databaseUse();
+            dtb.connect();
+        }
     }
 }
