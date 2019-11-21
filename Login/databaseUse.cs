@@ -11,7 +11,7 @@ namespace Login
     class databaseUse
     {
         //Primeiro passo colocar o endereço do banco de dados
-        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.etlima\source\repos\MinawaNythyx\Banco-de-dados-Login\Login\DB\loginData.mdf;Integrated Security=True;Connect Timeout=30";
+        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\juuja\source\repos\MinawaNythyx\Banco-de-dados-Login\Login\DB\loginData.mdf;Integrated Security=True;Connect Timeout=30";
         SqlConnection cn;
         //Definindo variaveis
         SqlCommand command;
@@ -42,6 +42,7 @@ namespace Login
             }
 
             MessageBox.Show(Output);
+            Output = "";
 
             dataReader.Close();
             command.Dispose();
@@ -56,27 +57,67 @@ namespace Login
         public void InsertDB(string name, string senha)
         {
             cn = new SqlConnection(connection);
-            cn.Open();
-            MessageBox.Show("Connection Open");
             SqlCommand command;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = "Insert into login (username,password) values('" + name + "',"+ senha +")";
+
+
+            sql = "insert into login(username, password)";
+            sql += "values(@username, @password) ";
 
             command = new SqlCommand(sql, cn);
 
-            adapter.InsertCommand = new SqlCommand(sql, cn);
-            adapter.InsertCommand.ExecuteNonQuery();
+            command.Parameters.AddWithValue("@username", name);
+            command.Parameters.AddWithValue("@password", senha);
 
-            command.Dispose();
-            cn.Close();
-            MessageBox.Show("Connection Close");
+            try
+            {
+                cn.Open();
+                MessageBox.Show("Connection Open");
+                int rows = command.ExecuteNonQuery();
+                MessageBox.Show("Rows affected: " + rows);
+            }
+            catch(Exception erro)
+            {
+                throw new Exception("Ocorreu um erro de insert " + erro.Message);
+            }
+            finally
+            {
+                command.Dispose();
+                cn.Close();
+                MessageBox.Show("Connection Close");
+            }
         }
 
 
-        //Atualizar as informações
-        public void UpdateDB()
+        //Verificar as informações
+        public void VerifyDB(string uSER, string pASS)
         {
+            cn = new SqlConnection(connection);
 
+            cn.Open();
+
+            sql = "Select loginID,username,password from login";
+
+            command = new SqlCommand(sql, cn);
+
+            dataReader = command.ExecuteReader();
+
+            while (dataReader.Read())
+            {
+                if (uSER == dataReader[1].ToString())
+                {
+                    MessageBox.Show("Usuario igual");
+                    if (pASS == dataReader[2].ToString())
+                    {
+                        Main main = new Main();
+                        main.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Usuario ou senha incorretos");
+                    }
+                }
+            }
+            cn.Close();
         }
 
 

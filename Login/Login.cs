@@ -20,7 +20,8 @@ namespace Login
 
         private void loginbtn_Click(object sender, EventArgs e)
         {
-            dtb.ReadDB();
+            dtb.VerifyDB(usertxt.Text, passtxt.Text);
+            //dtb.ReadDB();
         }
 
         private void createlogin_Click(object sender, EventArgs e)
