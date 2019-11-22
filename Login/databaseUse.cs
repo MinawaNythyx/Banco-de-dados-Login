@@ -11,7 +11,7 @@ namespace Login
     class databaseUse
     {
         //Primeiro passo colocar o endereço do banco de dados
-        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.etlima\source\repos\MinawaNythyx\Banco-de-dados-Login\Login\DB\loginData.mdf;Integrated Security=True;Connect Timeout=30";
+        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.lima\source\repos\Login\Login\DB\DatabaseLogin.mdf;Integrated Security=True;Connect Timeout=30";
         SqlConnection cn;
         //Definindo variaveis
         SqlCommand command;
@@ -59,31 +59,63 @@ namespace Login
             cn = new SqlConnection(connection);
             SqlCommand command;
 
-
-            sql = "insert into login(username, password)";
-            sql += "values(@username, @password) ";
-
-            command = new SqlCommand(sql, cn);
-
-            command.Parameters.AddWithValue("@username", name);
-            command.Parameters.AddWithValue("@password", senha);
-
-            try
+            if (name != "")
             {
+                sql = "Select loginID,username,password from login";
+
+                command = new SqlCommand(sql, cn);
+
                 cn.Open();
-                MessageBox.Show("Connection Open");
-                int rows = command.ExecuteNonQuery();
-                MessageBox.Show("Rows affected: " + rows);
+
+                dataReader = command.ExecuteReader();
+
+                if (name == dataReader[1].ToString())
+                {
+                    MessageBox.Show("Usuario ja existe");
+                    cn.Close();
+                }
+                else
+                {
+                    cn.Close();
+                    if (senha != "")
+                    {
+
+                        sql = "insert into login(username, password)";
+                        sql += "values(@username, @password) ";
+
+                        command = new SqlCommand(sql, cn);
+
+                        command.Parameters.AddWithValue("@username", name);
+                        command.Parameters.AddWithValue("@password", senha);
+
+                        try
+                        {
+                            cn.Open();
+                            MessageBox.Show("Connection Open");
+                            int rows = command.ExecuteNonQuery();
+                            MessageBox.Show("Rows affected: " + rows);
+                        }
+                        catch (Exception erro)
+                        {
+                            throw new Exception("Ocorreu um erro de insert " + erro.Message);
+                        }
+                        finally
+                        {
+                            command.Dispose();
+                            cn.Close();
+                            MessageBox.Show("Connection Close");
+                        }
+                        MessageBox.Show("Worked");
+                    }
+                    else
+                    {
+                        MessageBox.Show("O campo SENHA esta vazio");
+                    }
+                }
             }
-            catch(Exception erro)
+            else
             {
-                throw new Exception("Ocorreu um erro de insert " + erro.Message);
-            }
-            finally
-            {
-                command.Dispose();
-                cn.Close();
-                MessageBox.Show("Connection Close");
+                MessageBox.Show("O campo USUARIO esta vazio");
             }
         }
 
@@ -115,6 +147,10 @@ namespace Login
                     {
                         MessageBox.Show("Usuario ou senha incorretos");
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Usuario ou senha incorretos");
                 }
             }
             cn.Close();
