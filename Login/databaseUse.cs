@@ -11,11 +11,12 @@ namespace Login
     class databaseUse
     {
         //Primeiro passo colocar o endereço do banco de dados
-        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.lima\source\repos\Login\Login\DB\DatabaseLogin.mdf;Integrated Security=True;Connect Timeout=30";
+        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.etlima\source\repos\MinawaNythyx\Banco-de-dados-Login\Login\DB\loginData.mdf;Integrated Security=True;Connect Timeout=30";
         SqlConnection cn;
         //Definindo variaveis
         SqlCommand command;
         SqlDataReader dataReader;
+        private string User, Pass;
         string sql, Output = "";
 
 
@@ -67,16 +68,20 @@ namespace Login
 
                 cn.Open();
 
+                command.ExecuteNonQuery();
+
                 dataReader = command.ExecuteReader();
 
-                if (name == dataReader[1].ToString())
+                while (dataReader.Read())
                 {
-                    MessageBox.Show("Usuario ja existe");
-                    cn.Close();
+                    User = dataReader[1].ToString();
+                    Pass = dataReader[2].ToString();
                 }
-                else
+
+                cn.Close();
+
+                if(User != name)
                 {
-                    cn.Close();
                     if (senha != "")
                     {
 
@@ -112,6 +117,12 @@ namespace Login
                         MessageBox.Show("O campo SENHA esta vazio");
                     }
                 }
+                else
+                {
+                    MessageBox.Show("Usuario ja existe");
+                }
+
+
             }
             else
             {
@@ -135,10 +146,14 @@ namespace Login
 
             while (dataReader.Read())
             {
-                if (uSER == dataReader[1].ToString())
+                User = dataReader[1].ToString();
+                Pass = dataReader[2].ToString();
+                cn.Close();
+
+                if (uSER == User)
                 {
-                    MessageBox.Show("Usuario igual");
-                    if (pASS == dataReader[2].ToString())
+                    MessageBox.Show("Usuario igual");   
+                    if (pASS == Pass)
                     {
                         Main main = new Main();
                         main.Show();
@@ -153,7 +168,6 @@ namespace Login
                     MessageBox.Show("Usuario ou senha incorretos");
                 }
             }
-            cn.Close();
         }
 
 
