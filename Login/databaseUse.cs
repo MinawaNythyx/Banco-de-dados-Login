@@ -26,7 +26,7 @@ namespace Login
         SqlDataReader dataReader;
         private string User, Pass;
         string sql, Output = "";
-
+        int repeatUser;
 
 
         //Ler as informações
@@ -80,15 +80,24 @@ namespace Login
 
                 dataReader = command.ExecuteReader();
 
+                repeatUser = 0;
+
                 while (dataReader.Read())
                 {
                     User = dataReader[1].ToString();
                     Pass = dataReader[2].ToString();
+
+                    if (User != name)
+                    {
+                        repeatUser--;
+                    }
+                    else
+                    {
+                        repeatUser = 999999999;
+                    }
                 }
 
-                cn.Close();
-
-                if(User != name)
+                if (repeatUser < 0)
                 {
                     if (senha != "")
                     {
@@ -129,8 +138,7 @@ namespace Login
                 {
                     MessageBox.Show("Usuario ja existe");
                 }
-
-
+                cn.Close();
             }
             else
             {
