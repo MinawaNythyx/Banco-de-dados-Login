@@ -11,7 +11,15 @@ namespace Login
     class databaseUse
     {
         //Primeiro passo colocar o endereço do banco de dados
-        string connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\victor.etlima\source\repos\MinawaNythyx\Banco-de-dados-Login\Login\DB\loginData.mdf;Integrated Security=True;Connect Timeout=30";
+        private string dataFilePath;
+        private string ConnectionString
+        {
+            get { return @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dataFilePath + @";Integrated Security=True;Connect Timeout=30"; }
+        }
+        public databaseUse()
+        {
+            dataFilePath = Environment.CurrentDirectory + @"\DB\loginData.mdf";
+        }
         SqlConnection cn;
         //Definindo variaveis
         SqlCommand command;
@@ -25,7 +33,7 @@ namespace Login
         public void ReadDB()
         {
             //Criando o objeto da conexao
-            cn = new SqlConnection(connection);
+            cn = new SqlConnection(ConnectionString);
             //abrindo a conexao com o banco de dados
             cn.Open();
             //verificando se a conexao foi aberta
@@ -57,7 +65,7 @@ namespace Login
         //Inserir as informações
         public void InsertDB(string name, string senha)
         {
-            cn = new SqlConnection(connection);
+            cn = new SqlConnection(ConnectionString);
             SqlCommand command;
 
             if (name != "")
@@ -134,7 +142,7 @@ namespace Login
         //Verificar as informações
         public void VerifyDB(string uSER, string pASS)
         {
-            cn = new SqlConnection(connection);
+            cn = new SqlConnection(ConnectionString);
 
             cn.Open();
 
@@ -148,7 +156,7 @@ namespace Login
             {
                 User = dataReader[1].ToString();
                 Pass = dataReader[2].ToString();
-                cn.Close();
+                
 
                 if (uSER == User)
                 {
@@ -168,6 +176,7 @@ namespace Login
                     MessageBox.Show("Usuario ou senha incorretos");
                 }
             }
+            cn.Close();
         }
 
 
