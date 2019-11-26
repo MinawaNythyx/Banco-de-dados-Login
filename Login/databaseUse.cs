@@ -96,6 +96,7 @@ namespace Login
                         repeatUser = 999999999;
                     }
                 }
+                cn.Close();
 
                 if (repeatUser < 0)
                 {
